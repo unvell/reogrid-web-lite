@@ -36,13 +36,12 @@ import { Reogrid } from '@reogrid/lite/react'
 import type { ReogridInstance } from '@reogrid/lite/react'
 
 export default function App() {
-  function onReady({ api }: ReogridInstance) {
-    api.setCellValue('A1', 'Product')
-    api.setCellValue('B1', 'Price')
-    api.setCellStyle('A1', { fontBold: true, backgroundColor: '#dbeafe' })
-    api.setCellStyle('B1', { fontBold: true, backgroundColor: '#dbeafe' })
-    api.setCellValue('A2', 'Widget')
-    api.setCellValue('B2', '9.99')
+  function onReady({ worksheet }: ReogridInstance) {
+    worksheet.cell('A1').setValue('Product').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+    worksheet.cell('B1').setValue('Price').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+    worksheet.cell('A2').value = 'Widget'
+    worksheet.cell('B2').value = '9.99'
+    worksheet.column(0).width = 120
   }
 
   return (
@@ -61,13 +60,12 @@ export default function App() {
 import { Reogrid } from '@reogrid/lite/vue'
 import type { ReogridInstance } from '@reogrid/lite/vue'
 
-function onReady({ api }: ReogridInstance) {
-  api.setCellValue('A1', 'Product')
-  api.setCellValue('B1', 'Price')
-  api.setCellStyle('A1', { fontBold: true, backgroundColor: '#dbeafe' })
-  api.setCellStyle('B1', { fontBold: true, backgroundColor: '#dbeafe' })
-  api.setCellValue('A2', 'Widget')
-  api.setCellValue('B2', '9.99')
+function onReady({ worksheet }: ReogridInstance) {
+  worksheet.cell('A1').setValue('Product').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+  worksheet.cell('B1').setValue('Price').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+  worksheet.cell('A2').value = 'Widget'
+  worksheet.cell('B2').value = '9.99'
+  worksheet.column(0).width = 120
 }
 </script>
 
@@ -82,16 +80,16 @@ function onReady({ api }: ReogridInstance) {
 
 ```tsx
 // React
-function onReady({ api }: ReogridInstance) {
-  api.loadFromUrl('/data/report.xlsx')
+function onReady({ worksheet }: ReogridInstance) {
+  worksheet.loadFromUrl('/data/report.xlsx')
 }
 ```
 
 ```vue
 <!-- Vue -->
 <script setup lang="ts">
-async function onReady({ api }: ReogridInstance) {
-  await api.loadFromUrl('/data/report.xlsx')
+async function onReady({ worksheet }: ReogridInstance) {
+  await worksheet.loadFromUrl('/data/report.xlsx')
 }
 </script>
 ```
@@ -119,21 +117,79 @@ async function onReady({ api }: ReogridInstance) {
 | `class` | `string` | CSS class applied to the host `<div>` |
 | `options` | `ReogridOptions` | Advanced options passed to `createReogrid()` |
 
-### WorksheetAPI Methods
+### `worksheet.cell(a1)` — CellHandle
+
+```ts
+worksheet.cell('B3').value = 'Hello'
+worksheet.cell('B3').style = { bold: true, color: '#1e3a5f' }
+
+// Fluent chaining
+worksheet.cell('A1').setValue('Title').setStyle({ fontSize: 18, bold: true })
+```
+
+| Member | Type | Description |
+|---|---|---|
+| `value` | `string` (get/set) | Cell value |
+| `style` | `Partial<CellStyle>` (get/set) | Cell style |
+| `setValue(value)` | `CellHandle` | Set value, returns `this` for chaining |
+| `setStyle(style)` | `CellHandle` | Set style, returns `this` for chaining |
+| `getValue()` | `string` | Get value |
+| `getStyle()` | `CellStyle` | Get computed style |
+
+### `worksheet.range(a1Range)` — RangeHandle
+
+```ts
+worksheet.range('A1:E1').merge()
+worksheet.range('A9:E9').setStyle({ bold: true, backgroundColor: '#1e3a5f', color: '#fff' })
+worksheet.range('A1:E17').border({ style: 'solid', color: '#cbd5e1' })
+worksheet.range('A1:E17').border({ style: 'solid', color: '#475569', width: 1.5 }, ['top', 'bottom'])
+```
 
 | Method | Description |
 |---|---|
-| `api.setCellValue(a1, value)` | Write a value to a cell (e.g. `'B3'`) |
-| `api.getCellValue(a1)` | Read a cell's value |
-| `api.setCellStyle(a1, style)` | Apply style to a cell |
-| `api.setCellBorder(a1, border)` | Set border on a cell or range |
-| `api.mergeCells(range)` | Merge a range (e.g. `'A1:C3'`) |
-| `api.setRowHeight(row, height)` | Set height of a row (px) |
-| `api.setColWidth(col, width)` | Set width of a column (px) |
-| `api.loadFromUrl(url)` | Load an xlsx file from a URL |
-| `api.loadFromFile(file)` | Load an xlsx `File` object |
-| `api.onSelectionChange(fn)` | Subscribe to selection changes |
-| `api.onCellValueChange(fn)` | Subscribe to cell value changes |
+| `merge()` | Merge cells in range |
+| `unmerge()` | Unmerge cells in range |
+| `setStyle(style)` | Apply style to all cells in range |
+| `setBackgroundColor(color)` | Set background color for range |
+| `border(options, sides?)` | Set border; `sides` = `['top','bottom','left','right','outside','inside']` |
+
+### `worksheet.column(index)` — ColumnHandle
+
+```ts
+worksheet.column(0).width = 120  // A column
+worksheet.column(1).width = 200  // B column
+```
+
+### `worksheet.row(index)` — RowHandle
+
+```ts
+worksheet.row(0).height = 48   // row 1
+worksheet.row(8).height = 24   // row 9
+```
+
+### `worksheet` direct properties
+
+```ts
+worksheet.showGridLines = false
+```
+
+### Event subscriptions
+
+```ts
+worksheet.onSelectionChange((cell) => {
+  console.log(cell?.row, cell?.column)
+})
+worksheet.onCellValueChange(({ row, column, value }) => {
+  console.log(row, column, value)
+})
+```
+
+### xlsx import
+
+```ts
+await worksheet.loadFromUrl('/data/report.xlsx')
+await worksheet.loadFromFile(file)  // File object from <input type="file">
+```
 
 ---
 
@@ -218,13 +274,12 @@ import { Reogrid } from '@reogrid/lite/react'
 import type { ReogridInstance } from '@reogrid/lite/react'
 
 export default function App() {
-  function onReady({ api }: ReogridInstance) {
-    api.setCellValue('A1', '商品名')
-    api.setCellValue('B1', '価格')
-    api.setCellStyle('A1', { fontBold: true, backgroundColor: '#dbeafe' })
-    api.setCellStyle('B1', { fontBold: true, backgroundColor: '#dbeafe' })
-    api.setCellValue('A2', 'ウィジェット')
-    api.setCellValue('B2', '1,000')
+  function onReady({ worksheet }: ReogridInstance) {
+    worksheet.cell('A1').setValue('商品名').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+    worksheet.cell('B1').setValue('価格').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+    worksheet.cell('A2').value = 'ウィジェット'
+    worksheet.cell('B2').value = '1,000'
+    worksheet.column(0).width = 120
   }
 
   return (
@@ -243,13 +298,12 @@ export default function App() {
 import { Reogrid } from '@reogrid/lite/vue'
 import type { ReogridInstance } from '@reogrid/lite/vue'
 
-function onReady({ api }: ReogridInstance) {
-  api.setCellValue('A1', '商品名')
-  api.setCellValue('B1', '価格')
-  api.setCellStyle('A1', { fontBold: true, backgroundColor: '#dbeafe' })
-  api.setCellStyle('B1', { fontBold: true, backgroundColor: '#dbeafe' })
-  api.setCellValue('A2', 'ウィジェット')
-  api.setCellValue('B2', '1,000')
+function onReady({ worksheet }: ReogridInstance) {
+  worksheet.cell('A1').setValue('商品名').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+  worksheet.cell('B1').setValue('価格').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+  worksheet.cell('A2').value = 'ウィジェット'
+  worksheet.cell('B2').value = '1,000'
+  worksheet.column(0).width = 120
 }
 </script>
 

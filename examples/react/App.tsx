@@ -5,22 +5,25 @@ import type { ReogridInstance } from '@reogrid/lite/react'
 export default function App() {
   const gridRef = useRef<ReogridInstance>(null)
 
-  function onReady({ api, worksheet }: ReogridInstance) {
-    // Header row
-    api.setCellValue('A1', '商品コード')
-    api.setCellValue('B1', '商品名')
-    api.setCellValue('C1', '単価')
-    api.setCellValue('D1', '数量')
-    api.setCellValue('E1', '金額')
+  function onReady({ worksheet }: ReogridInstance) {
+    // Column widths
+    worksheet.column(0).width = 100 // A
+    worksheet.column(1).width = 160 // B
+    worksheet.column(2).width = 80  // C
+    worksheet.column(3).width = 60  // D
+    worksheet.column(4).width = 80  // E
 
-    // Header styles
-    for (const col of ['A', 'B', 'C', 'D', 'E']) {
-      api.setCellStyle(`${col}1`, {
-        bold: true,
-        backgroundColor: '#1e3a5f',
-        color: '#ffffff',
-      })
-    }
+    // Header row
+    worksheet.range('A1:E1').setStyle({
+      bold: true,
+      backgroundColor: '#1e3a5f',
+      color: '#ffffff',
+    })
+    worksheet.cell('A1').value = '商品コード'
+    worksheet.cell('B1').value = '商品名'
+    worksheet.cell('C1').value = '単価'
+    worksheet.cell('D1').value = '数量'
+    worksheet.cell('E1').value = '金額'
 
     // Sample data
     const rows = [
@@ -31,19 +34,12 @@ export default function App() {
 
     rows.forEach((row, i) => {
       const r = i + 2
-      api.setCellValue(`A${r}`, String(row[0]))
-      api.setCellValue(`B${r}`, String(row[1]))
-      api.setCellValue(`C${r}`, String(row[2]))
-      api.setCellValue(`D${r}`, String(row[3]))
-      api.setCellValue(`E${r}`, String(row[4]))
+      worksheet.cell(`A${r}`).value = String(row[0])
+      worksheet.cell(`B${r}`).value = String(row[1])
+      worksheet.cell(`C${r}`).value = String(row[2])
+      worksheet.cell(`D${r}`).value = String(row[3])
+      worksheet.cell(`E${r}`).value = String(row[4])
     })
-
-    // Column widths
-    worksheet.setColumnWidth(0, 100) // A
-    worksheet.setColumnWidth(1, 160) // B
-    worksheet.setColumnWidth(2, 80)  // C
-    worksheet.setColumnWidth(3, 60)  // D
-    worksheet.setColumnWidth(4, 80)  // E
   }
 
   return (

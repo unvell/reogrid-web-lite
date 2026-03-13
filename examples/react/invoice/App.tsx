@@ -4,72 +4,65 @@ import type { ReogridInstance } from '@reogrid/lite/react'
 const fmt = (n: number) => n.toLocaleString('ja-JP')
 
 export default function App() {
-  function onReady({ api, worksheet }: ReogridInstance) {
+  function onReady({ worksheet }: ReogridInstance) {
     // ── Column widths (0-indexed) ──────────────────────
-    worksheet.setColumnWidth(0, 40)   // A: No.
-    worksheet.setColumnWidth(1, 200)  // B: 品目
-    worksheet.setColumnWidth(2, 60)   // C: 数量
-    worksheet.setColumnWidth(3, 90)   // D: 単価
-    worksheet.setColumnWidth(4, 110)  // E: 金額
+    worksheet.column(0).width = 40   // A: No.
+    worksheet.column(1).width = 200  // B: 品目
+    worksheet.column(2).width = 60   // C: 数量
+    worksheet.column(3).width = 90   // D: 単価
+    worksheet.column(4).width = 110  // E: 金額
 
     // ── Row heights (0-indexed) ────────────────────────
-    worksheet.setRowHeight(0, 48)  // row 1: title
-    worksheet.setRowHeight(1, 8)   // row 2: spacer
-    worksheet.setRowHeight(5, 10)  // row 6: spacer
-    worksheet.setRowHeight(6, 40)  // row 7: total amount
-    worksheet.setRowHeight(7, 10)  // row 8: spacer
-    worksheet.setRowHeight(8, 24)  // row 9: table header
+    worksheet.row(0).height = 48  // row 1: title
+    worksheet.row(1).height = 8   // row 2: spacer
+    worksheet.row(5).height = 10  // row 6: spacer
+    worksheet.row(6).height = 40  // row 7: total amount
+    worksheet.row(7).height = 10  // row 8: spacer
+    worksheet.row(8).height = 24  // row 9: table header
 
-    // グリッド線を非表示にしてインボイスらしく見せる
-    api.setShowGridLines(false)
+    worksheet.showGridLines = false
 
     // ── タイトル ───────────────────────────────────────
-    api.mergeCells('A1:E1')
-    api.setCellValue('A1', '請　求　書')
-    api.setCellStyle('A1', {
-      fontSize: 18,
-      bold: true,
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      backgroundColor: '#1e3a5f',
-      color: '#ffffff',
-    })
+    worksheet.range('A1:E1').merge()
+    worksheet.cell('A1')
+      .setValue('請　求　書')
+      .setStyle({
+        fontSize: 18,
+        bold: true,
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        backgroundColor: '#1e3a5f',
+        color: '#ffffff',
+      })
 
     // ── 請求先（左） ───────────────────────────────────
-    api.mergeCells('A3:C3')
-    api.setCellValue('A3', '〇〇株式会社　御中')
-    api.setCellStyle('A3', { bold: true, fontSize: 13 })
+    worksheet.range('A3:C3').merge()
+    worksheet.cell('A3').setValue('〇〇株式会社　御中').setStyle({ bold: true, fontSize: 13 })
 
-    api.mergeCells('A4:C4')
-    api.setCellValue('A4', 'システム開発部　山田 様')
-    api.setCellStyle('A4', { fontSize: 11 })
+    worksheet.range('A4:C4').merge()
+    worksheet.cell('A4').setValue('システム開発部　山田 様').setStyle({ fontSize: 11 })
 
     // ── 発行元情報（右） ───────────────────────────────
-    api.setCellStyle('D3', { textAlign: 'right', color: '#64748b' })
-    api.setCellValue('D3', '発行日：')
-    api.setCellValue('E3', '2026年3月12日')
+    worksheet.cell('D3').setStyle({ textAlign: 'right', color: '#64748b' }).setValue('発行日：')
+    worksheet.cell('E3').value = '2026年3月12日'
 
-    api.setCellStyle('D4', { textAlign: 'right', color: '#64748b' })
-    api.setCellValue('D4', '請求書No.：')
-    api.setCellValue('E4', 'INV-2026-001')
+    worksheet.cell('D4').setStyle({ textAlign: 'right', color: '#64748b' }).setValue('請求書No.：')
+    worksheet.cell('E4').value = 'INV-2026-001'
 
-    api.setCellStyle('D5', { textAlign: 'right', color: '#64748b' })
-    api.setCellValue('D5', '発行元：')
-    api.setCellValue('E5', 'UNVELL株式会社')
+    worksheet.cell('D5').setStyle({ textAlign: 'right', color: '#64748b' }).setValue('発行元：')
+    worksheet.cell('E5').value = 'UNVELL株式会社'
 
     // ── ご請求金額ブロック ─────────────────────────────
-    api.mergeCells('A7:C7')
-    api.setCellValue('A7', 'ご請求金額（税込）')
-    api.setCellStyle('A7', {
+    worksheet.range('A7:C7').merge()
+    worksheet.cell('A7').setValue('ご請求金額（税込）').setStyle({
       bold: true,
       fontSize: 12,
       verticalAlign: 'middle',
       backgroundColor: '#f0f4f8',
     })
 
-    api.mergeCells('D7:E7')
-    api.setCellValue('D7', '¥330,000')
-    api.setCellStyle('D7', {
+    worksheet.range('D7:E7').merge()
+    worksheet.cell('D7').setValue('¥330,000').setStyle({
       bold: true,
       fontSize: 16,
       textAlign: 'right',
@@ -78,10 +71,9 @@ export default function App() {
       color: '#1e3a5f',
     })
 
-    // ご請求金額の外枠
-    api.setRangeBorderA1('A7:E7', { style: 'solid', color: '#1e3a5f', width: 2 }, ['top', 'bottom'])
-    api.setRangeBorderA1('A7:A7', { style: 'solid', color: '#1e3a5f', width: 2 }, ['left'])
-    api.setRangeBorderA1('E7:E7', { style: 'solid', color: '#1e3a5f', width: 2 }, ['right'])
+    worksheet.range('A7:E7').border({ style: 'solid', color: '#1e3a5f', width: 2 }, ['top', 'bottom'])
+    worksheet.range('A7:A7').border({ style: 'solid', color: '#1e3a5f', width: 2 }, ['left'])
+    worksheet.range('E7:E7').border({ style: 'solid', color: '#1e3a5f', width: 2 }, ['right'])
 
     // ── 明細テーブルヘッダー ───────────────────────────
     const headerStyle = {
@@ -90,16 +82,11 @@ export default function App() {
       color: '#ffffff',
       verticalAlign: 'middle' as const,
     }
-    api.setCellValue('A9', 'No.')
-    api.setCellStyle('A9', { ...headerStyle, textAlign: 'center' })
-    api.setCellValue('B9', '品目')
-    api.setCellStyle('B9', headerStyle)
-    api.setCellValue('C9', '数量')
-    api.setCellStyle('C9', { ...headerStyle, textAlign: 'center' })
-    api.setCellValue('D9', '単価（円）')
-    api.setCellStyle('D9', { ...headerStyle, textAlign: 'right' })
-    api.setCellValue('E9', '金額（円）')
-    api.setCellStyle('E9', { ...headerStyle, textAlign: 'right' })
+    worksheet.cell('A9').setValue('No.').setStyle({ ...headerStyle, textAlign: 'center' })
+    worksheet.cell('B9').setValue('品目').setStyle(headerStyle)
+    worksheet.cell('C9').setValue('数量').setStyle({ ...headerStyle, textAlign: 'center' })
+    worksheet.cell('D9').setValue('単価（円）').setStyle({ ...headerStyle, textAlign: 'right' })
+    worksheet.cell('E9').setValue('金額（円）').setStyle({ ...headerStyle, textAlign: 'right' })
 
     // ── 明細行 ─────────────────────────────────────────
     const items: [string, number, number][] = [
@@ -111,48 +98,33 @@ export default function App() {
     ]
 
     items.forEach(([name, qty, unitPrice], i) => {
-      const row = i + 10   // rows 10–14
+      const row = i + 10
       const amount = qty * unitPrice
       const bg = i % 2 === 0 ? '#ffffff' : '#f8fafc'
 
-      api.setCellValue(`A${row}`, String(i + 1))
-      api.setCellStyle(`A${row}`, { textAlign: 'center', backgroundColor: bg })
-
-      api.setCellValue(`B${row}`, name)
-      api.setCellStyle(`B${row}`, { backgroundColor: bg })
-
-      api.setCellValue(`C${row}`, String(qty))
-      api.setCellStyle(`C${row}`, { textAlign: 'center', backgroundColor: bg })
-
-      api.setCellValue(`D${row}`, fmt(unitPrice))
-      api.setCellStyle(`D${row}`, { textAlign: 'right', backgroundColor: bg })
-
-      api.setCellValue(`E${row}`, fmt(amount))
-      api.setCellStyle(`E${row}`, { textAlign: 'right', backgroundColor: bg })
+      worksheet.cell(`A${row}`).setValue(String(i + 1)).setStyle({ textAlign: 'center', backgroundColor: bg })
+      worksheet.cell(`B${row}`).setValue(name).setStyle({ backgroundColor: bg })
+      worksheet.cell(`C${row}`).setValue(String(qty)).setStyle({ textAlign: 'center', backgroundColor: bg })
+      worksheet.cell(`D${row}`).setValue(fmt(unitPrice)).setStyle({ textAlign: 'right', backgroundColor: bg })
+      worksheet.cell(`E${row}`).setValue(fmt(amount)).setStyle({ textAlign: 'right', backgroundColor: bg })
     })
 
     // ── 小計・消費税・合計 ─────────────────────────────
-    api.mergeCells('A15:D15')
-    api.setCellValue('A15', '小計')
-    api.setCellStyle('A15', { textAlign: 'right', backgroundColor: '#f0f4f8' })
-    api.setCellValue('E15', fmt(300000))
-    api.setCellStyle('E15', { textAlign: 'right', backgroundColor: '#f0f4f8' })
+    worksheet.range('A15:D15').merge()
+    worksheet.cell('A15').setValue('小計').setStyle({ textAlign: 'right', backgroundColor: '#f0f4f8' })
+    worksheet.cell('E15').setValue(fmt(300000)).setStyle({ textAlign: 'right', backgroundColor: '#f0f4f8' })
 
-    api.mergeCells('A16:D16')
-    api.setCellValue('A16', '消費税（10%）')
-    api.setCellStyle('A16', { textAlign: 'right', backgroundColor: '#f0f4f8' })
-    api.setCellValue('E16', fmt(30000))
-    api.setCellStyle('E16', { textAlign: 'right', backgroundColor: '#f0f4f8' })
+    worksheet.range('A16:D16').merge()
+    worksheet.cell('A16').setValue('消費税（10%）').setStyle({ textAlign: 'right', backgroundColor: '#f0f4f8' })
+    worksheet.cell('E16').setValue(fmt(30000)).setStyle({ textAlign: 'right', backgroundColor: '#f0f4f8' })
 
-    api.mergeCells('A17:D17')
-    api.setCellValue('A17', '合計（税込）')
-    api.setCellStyle('A17', {
+    worksheet.range('A17:D17').merge()
+    worksheet.cell('A17').setValue('合計（税込）').setStyle({
       bold: true,
       textAlign: 'right',
       backgroundColor: '#dbeafe',
     })
-    api.setCellValue('E17', `¥${fmt(330000)}`)
-    api.setCellStyle('E17', {
+    worksheet.cell('E17').setValue(`¥${fmt(330000)}`).setStyle({
       bold: true,
       textAlign: 'right',
       backgroundColor: '#dbeafe',
@@ -160,27 +132,22 @@ export default function App() {
     })
 
     // ── テーブル罫線 ───────────────────────────────────
-    // 水平線（各行の上下）
     for (let row = 9; row <= 17; row++) {
-      api.setRangeBorderA1(`A${row}:E${row}`, { style: 'solid', color: '#cbd5e1' }, ['top', 'bottom'])
+      worksheet.range(`A${row}:E${row}`).border({ style: 'solid', color: '#cbd5e1' }, ['top', 'bottom'])
     }
-    // 垂直線（各列の左右）
     for (const col of ['A', 'B', 'C', 'D', 'E']) {
-      api.setRangeBorderA1(`${col}9:${col}17`, { style: 'solid', color: '#cbd5e1' }, ['left', 'right'])
+      worksheet.range(`${col}9:${col}17`).border({ style: 'solid', color: '#cbd5e1' }, ['left', 'right'])
     }
-    // 外枠を上書き（やや濃く）
-    api.setRangeBorderA1('A9:E17', { style: 'solid', color: '#475569', width: 1.5 }, ['top', 'bottom'])
-    api.setRangeBorderA1('A9:A17', { style: 'solid', color: '#475569', width: 1.5 }, ['left'])
-    api.setRangeBorderA1('E9:E17', { style: 'solid', color: '#475569', width: 1.5 }, ['right'])
+    worksheet.range('A9:E17').border({ style: 'solid', color: '#475569', width: 1.5 }, ['top', 'bottom'])
+    worksheet.range('A9:A17').border({ style: 'solid', color: '#475569', width: 1.5 }, ['left'])
+    worksheet.range('E9:E17').border({ style: 'solid', color: '#475569', width: 1.5 }, ['right'])
 
     // ── フッター ───────────────────────────────────────
-    api.mergeCells('A19:E19')
-    api.setCellValue('A19', 'お支払い期限：2026年4月30日')
-    api.setCellStyle('A19', { bold: true, color: '#dc2626' })
+    worksheet.range('A19:E19').merge()
+    worksheet.cell('A19').setValue('お支払い期限：2026年4月30日').setStyle({ bold: true, color: '#dc2626' })
 
-    api.mergeCells('A20:E20')
-    api.setCellValue('A20', '振込先：〇〇銀行 △△支店　普通預金　1234567　UNVELL株式会社')
-    api.setCellStyle('A20', { fontSize: 9, color: '#475569' })
+    worksheet.range('A20:E20').merge()
+    worksheet.cell('A20').setValue('振込先：〇〇銀行 △△支店　普通預金　1234567　UNVELL株式会社').setStyle({ fontSize: 9, color: '#475569' })
   }
 
   return (
