@@ -154,12 +154,12 @@ async function onReady({ api }: ReogridInstance) {
 
 ## Examples
 
-See the [`examples/`](./examples) directory for ready-to-run samples:
+Each example is a self-contained Vite project (`npm install && npm run dev`).
 
-| Example | React | Vue | Description |
+| Example | React | Vue | Live Demo |
 |---|---|---|---|
-| Basic product list | [`examples/react/App.tsx`](./examples/react/App.tsx) | [`examples/vue/App.vue`](./examples/vue/App.vue) | Simple product table with headers and data rows |
-| **Invoice** | [`examples/react/invoice/App.tsx`](./examples/react/invoice/App.tsx) | [`examples/vue/invoice/App.vue`](./examples/vue/invoice/App.vue) | Japanese business invoice with merged cells, borders, and styled subtotals |
+| Basic product list | [`examples/react/`](./examples/react) | [`examples/vue/`](./examples/vue) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
+| **Invoice** (請求書) | [`examples/react/invoice/`](./examples/react/invoice) | [`examples/vue/invoice/`](./examples/vue/invoice) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
 
 ---
 
@@ -277,10 +277,12 @@ function onReady({ api }: ReogridInstance) {
 
 ## サンプル一覧
 
-| サンプル | React | Vue | 説明 |
+各サンプルは単体で動く Vite プロジェクトです（`npm install && npm run dev`）。
+
+| サンプル | React | Vue | Live Demo |
 |---|---|---|---|
-| 商品一覧（基本） | [`examples/react/App.tsx`](./examples/react/App.tsx) | [`examples/vue/App.vue`](./examples/vue/App.vue) | ヘッダーとデータ行のシンプルな商品テーブル |
-| **請求書** | [`examples/react/invoice/App.tsx`](./examples/react/invoice/App.tsx) | [`examples/vue/invoice/App.vue`](./examples/vue/invoice/App.vue) | セル結合・罫線・小計行を使った日本式請求書帳票 |
+| 商品一覧（基本） | [`examples/react/`](./examples/react) | [`examples/vue/`](./examples/vue) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
+| **請求書** | [`examples/react/invoice/`](./examples/react/invoice) | [`examples/vue/invoice/`](./examples/vue/invoice) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
 
 ## リンク
 

@@ -4,21 +4,21 @@ import type { ReogridInstance } from '@reogrid/lite/react'
 const fmt = (n: number) => n.toLocaleString('ja-JP')
 
 export default function App() {
-  function onReady({ api }: ReogridInstance) {
+  function onReady({ api, worksheet }: ReogridInstance) {
     // ── Column widths (0-indexed) ──────────────────────
-    api.setColumnWidth(0, 40)   // A: No.
-    api.setColumnWidth(1, 200)  // B: 品目
-    api.setColumnWidth(2, 60)   // C: 数量
-    api.setColumnWidth(3, 90)   // D: 単価
-    api.setColumnWidth(4, 110)  // E: 金額
+    worksheet.setColumnWidth(0, 40)   // A: No.
+    worksheet.setColumnWidth(1, 200)  // B: 品目
+    worksheet.setColumnWidth(2, 60)   // C: 数量
+    worksheet.setColumnWidth(3, 90)   // D: 単価
+    worksheet.setColumnWidth(4, 110)  // E: 金額
 
     // ── Row heights (0-indexed) ────────────────────────
-    api.setRowHeight(0, 48)  // row 1: title
-    api.setRowHeight(1, 8)   // row 2: spacer
-    api.setRowHeight(5, 10)  // row 6: spacer
-    api.setRowHeight(6, 40)  // row 7: total amount
-    api.setRowHeight(7, 10)  // row 8: spacer
-    api.setRowHeight(8, 24)  // row 9: table header
+    worksheet.setRowHeight(0, 48)  // row 1: title
+    worksheet.setRowHeight(1, 8)   // row 2: spacer
+    worksheet.setRowHeight(5, 10)  // row 6: spacer
+    worksheet.setRowHeight(6, 40)  // row 7: total amount
+    worksheet.setRowHeight(7, 10)  // row 8: spacer
+    worksheet.setRowHeight(8, 24)  // row 9: table header
 
     // グリッド線を非表示にしてインボイスらしく見せる
     api.setShowGridLines(false)

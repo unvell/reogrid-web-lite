@@ -7,7 +7,7 @@ const grid = shallowRef<ReogridInstance | null>(null)
 
 function onReady(instance: ReogridInstance) {
   grid.value = instance
-  const { api } = instance
+  const { api, worksheet } = instance
 
   // Header row
   api.setCellValue('A1', '商品コード')
@@ -42,11 +42,11 @@ function onReady(instance: ReogridInstance) {
   })
 
   // Column widths
-  api.setColumnWidth(0, 100)
-  api.setColumnWidth(1, 160)
-  api.setColumnWidth(2, 80)
-  api.setColumnWidth(3, 60)
-  api.setColumnWidth(4, 80)
+  worksheet.setColumnWidth(0, 100)
+  worksheet.setColumnWidth(1, 160)
+  worksheet.setColumnWidth(2, 80)
+  worksheet.setColumnWidth(3, 60)
+  worksheet.setColumnWidth(4, 80)
 }
 </script>
 

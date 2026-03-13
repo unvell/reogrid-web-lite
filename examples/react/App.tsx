@@ -5,7 +5,7 @@ import type { ReogridInstance } from '@reogrid/lite/react'
 export default function App() {
   const gridRef = useRef<ReogridInstance>(null)
 
-  function onReady({ api }: ReogridInstance) {
+  function onReady({ api, worksheet }: ReogridInstance) {
     // Header row
     api.setCellValue('A1', '商品コード')
     api.setCellValue('B1', '商品名')
@@ -39,11 +39,11 @@ export default function App() {
     })
 
     // Column widths
-    api.setColumnWidth(0, 100) // A
-    api.setColumnWidth(1, 160) // B
-    api.setColumnWidth(2, 80)  // C
-    api.setColumnWidth(3, 60)  // D
-    api.setColumnWidth(4, 80)  // E
+    worksheet.setColumnWidth(0, 100) // A
+    worksheet.setColumnWidth(1, 160) // B
+    worksheet.setColumnWidth(2, 80)  // C
+    worksheet.setColumnWidth(3, 60)  // D
+    worksheet.setColumnWidth(4, 80)  // E
   }
 
   return (
