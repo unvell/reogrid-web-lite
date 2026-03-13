@@ -156,8 +156,10 @@ async function onReady({ api }: ReogridInstance) {
 
 See the [`examples/`](./examples) directory for ready-to-run samples:
 
-- [`examples/react/`](./examples/react) — React + Vite
-- [`examples/vue/`](./examples/vue) — Vue 3 + Vite
+| Example | React | Vue | Description |
+|---|---|---|---|
+| Basic product list | [`examples/react/App.tsx`](./examples/react/App.tsx) | [`examples/vue/App.vue`](./examples/vue/App.vue) | Simple product table with headers and data rows |
+| **Invoice** | [`examples/react/invoice/App.tsx`](./examples/react/invoice/App.tsx) | [`examples/vue/invoice/App.vue`](./examples/vue/invoice/App.vue) | Japanese business invoice with merged cells, borders, and styled subtotals |
 
 ---
 
@@ -272,6 +274,13 @@ function onReady({ api }: ReogridInstance) {
 → [価格・Pro版へのアップグレード](https://reogrid.net/jp/prices)
 
 ---
+
+## サンプル一覧
+
+| サンプル | React | Vue | 説明 |
+|---|---|---|---|
+| 商品一覧（基本） | [`examples/react/App.tsx`](./examples/react/App.tsx) | [`examples/vue/App.vue`](./examples/vue/App.vue) | ヘッダーとデータ行のシンプルな商品テーブル |
+| **請求書** | [`examples/react/invoice/App.tsx`](./examples/react/invoice/App.tsx) | [`examples/vue/invoice/App.vue`](./examples/vue/invoice/App.vue) | セル結合・罫線・小計行を使った日本式請求書帳票 |
 
 ## リンク
 

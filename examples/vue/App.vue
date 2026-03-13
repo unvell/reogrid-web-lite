@@ -19,9 +19,9 @@ function onReady(instance: ReogridInstance) {
   // Header styles
   for (const col of ['A', 'B', 'C', 'D', 'E']) {
     api.setCellStyle(`${col}1`, {
-      fontBold: true,
+      bold: true,
       backgroundColor: '#1e3a5f',
-      foregroundColor: '#ffffff',
+      color: '#ffffff',
     })
   }
 
@@ -36,17 +36,17 @@ function onReady(instance: ReogridInstance) {
     const r = i + 2
     api.setCellValue(`A${r}`, row[0])
     api.setCellValue(`B${r}`, row[1])
-    api.setCellValue(`C${r}`, row[2])
-    api.setCellValue(`D${r}`, row[3])
-    api.setCellValue(`E${r}`, row[4])
+    api.setCellValue(`C${r}`, String(row[2]))
+    api.setCellValue(`D${r}`, String(row[3]))
+    api.setCellValue(`E${r}`, String(row[4]))
   })
 
   // Column widths
-  api.setColWidth(0, 100)
-  api.setColWidth(1, 160)
-  api.setColWidth(2, 80)
-  api.setColWidth(3, 60)
-  api.setColWidth(4, 80)
+  api.setColumnWidth(0, 100)
+  api.setColumnWidth(1, 160)
+  api.setColumnWidth(2, 80)
+  api.setColumnWidth(3, 60)
+  api.setColumnWidth(4, 80)
 }
 </script>
 

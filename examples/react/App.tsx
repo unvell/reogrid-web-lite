@@ -16,9 +16,9 @@ export default function App() {
     // Header styles
     for (const col of ['A', 'B', 'C', 'D', 'E']) {
       api.setCellStyle(`${col}1`, {
-        fontBold: true,
+        bold: true,
         backgroundColor: '#1e3a5f',
-        foregroundColor: '#ffffff',
+        color: '#ffffff',
       })
     }
 
@@ -31,19 +31,19 @@ export default function App() {
 
     rows.forEach((row, i) => {
       const r = i + 2
-      api.setCellValue(`A${r}`, row[0])
-      api.setCellValue(`B${r}`, row[1])
-      api.setCellValue(`C${r}`, row[2])
-      api.setCellValue(`D${r}`, row[3])
-      api.setCellValue(`E${r}`, row[4])
+      api.setCellValue(`A${r}`, String(row[0]))
+      api.setCellValue(`B${r}`, String(row[1]))
+      api.setCellValue(`C${r}`, String(row[2]))
+      api.setCellValue(`D${r}`, String(row[3]))
+      api.setCellValue(`E${r}`, String(row[4]))
     })
 
     // Column widths
-    api.setColWidth(0, 100) // A
-    api.setColWidth(1, 160) // B
-    api.setColWidth(2, 80)  // C
-    api.setColWidth(3, 60)  // D
-    api.setColWidth(4, 80)  // E
+    api.setColumnWidth(0, 100) // A
+    api.setColumnWidth(1, 160) // B
+    api.setColumnWidth(2, 80)  // C
+    api.setColumnWidth(3, 60)  // D
+    api.setColumnWidth(4, 80)  // E
   }
 
   return (
