@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品一覧 — ReoGrid Lite / Vanilla</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; font-family: sans-serif; }
+
+      header {
+        padding: 0.5rem 1rem;
+        background: #1e3a5f;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      header h1 { margin: 0; font-size: 1rem; }
+
+      #toolbar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+      }
+      #toolbar .label {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-right: 2px;
+      }
+      #toolbar button {
+        padding: 4px 12px;
+        font-size: 0.8rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        background: #ffffff;
+        color: #374151;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+      }
+      #toolbar button:hover { background: #f1f5f9; border-color: #94a3b8; }
+      #toolbar button.active { background: #1e3a5f; color: #ffffff; border-color: #1e3a5f; }
+      #toolbar .sep { width: 1px; height: 20px; background: #e2e8f0; margin: 0 2px; }
+
+      #grid { flex: 1; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>商品一覧 — ReoGrid Lite / Vanilla</h1>
+    </header>
+
+    <div id="toolbar">
+      <span class="label">並び替え：</span>
+      <button data-key="price"  data-dir="asc">単価 ↑</button>
+      <button data-key="price"  data-dir="desc">単価 ↓</button>
+      <span class="sep"></span>
+      <button data-key="stock"  data-dir="asc">在庫 ↑</button>
+      <button data-key="stock"  data-dir="desc">在庫 ↓</button>
+      <span class="sep"></span>
+      <button data-key="rating" data-dir="desc">評価 ↓</button>
+      <button data-key="rating" data-dir="asc">評価 ↑</button>
+      <span class="sep"></span>
+      <button id="reset-btn">リセット</button>
+    </div>
+
+    <div id="grid"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
