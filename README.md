@@ -221,8 +221,8 @@ Each example is a self-contained Vite project (`npm install && npm run dev`).
 
 ## Links
 
-- [Official site (JP)](https://reogrid.net/jp)
-- [Official site (EN)](https://reogrid.net)
+- [Official site (JP)](https://web.reogrid.net/jp)
+- [Official site (EN)](https://web.reogrid.net)
 - [Pricing / Pro upgrade](https://reogrid.net/jp/prices)
 - [UNVELL Inc.](https://unvell.com)
 
@@ -340,6 +340,6 @@ function onReady({ worksheet }: ReogridInstance) {
 
 ## リンク
 
-- [公式サイト（日本語）](https://reogrid.net/jp)
+- [公式サイト（日本語）](https://web.reogrid.net/jp)
 - [価格・購入](https://reogrid.net/jp/prices)
 - [UNVELL株式会社](https://unvell.com)
