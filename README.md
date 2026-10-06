@@ -258,8 +258,9 @@ More on the website: [live demos](https://web.reogrid.net/demos) and [recipes](h
 
 ## License
 
-MIT — free for personal and commercial use.
-See [LICENSE](./LICENSE) for details.
+Free License · commercial use OK. ReoGrid Web Lite is proprietary software
+© UNVELL Inc. — not open source — and free to use, including in commercial
+products. See [pricing](https://web.reogrid.net/pricing) for the terms of each edition.
 
 ---
 
@@ -450,3 +451,9 @@ Pro 専用のメソッドは Lite にも存在しますが、コンソールに�
 - [価格・ReoGrid Web Pro](https://web.reogrid.net/jp/pricing)
 - [不具合の報告（GitHub Issues）](https://github.com/unvell/reogrid-web-lite/issues)
 - [UNVELL 株式会社](https://unvell.com)
+
+## ライセンス
+
+Free License・商用利用可。ReoGrid Web Lite は UNVELL 株式会社のソフトウェアで、オープンソースではありません。
+商用製品への組み込みを含め、無償でご利用いただけます。各エディションの条件は
+[価格ページ](https://web.reogrid.net/jp/pricing) をご覧ください。
