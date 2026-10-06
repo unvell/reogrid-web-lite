@@ -1,21 +1,25 @@
 # ReoGrid Web Lite
 
-**Canvas-based spreadsheet component for React and Vue.**
-Faithfully reproduces Excel-style cell layouts, borders, and merged cells on the web.
+**Canvas-based spreadsheet library for the web — use it from plain JavaScript / TypeScript or any framework, with React and Vue components included.**
+Opens Excel files and faithfully reproduces Excel-style cell layouts, styles, borders and merged cells in the browser.
 
-> **Lite version** — free to use with the following limits:
-> max 100 rows × 26 columns, xlsx export not available.
-> → [Upgrade to ReoGrid Web Pro](https://reogrid.net/jp/prices) for full features.
+> **Lite version** — free, commercial use included, with these limits:
+> max 100 rows × 26 columns, formulas are arithmetic and cell references only, no xlsx export.
+> → [Compare with ReoGrid Web Pro](https://web.reogrid.net/pricing) for the full feature set.
+
+[Website](https://web.reogrid.net) · [Documentation](https://web.reogrid.net/docs) · [Live demos](https://web.reogrid.net/demos) · 日本語の説明は後半にあります
 
 ---
 
 ## Features
 
-- High-performance Canvas rendering
-- React 17+ and Vue 3+ support
-- Excel-compatible cell styles, borders, and merged cells
-- Column / row resize, freeze panes
-- xlsx import (load existing Excel files)
+- Fast Canvas rendering
+- Framework-agnostic core (`createReogrid()`), plus React 17+ and Vue 3+ components
+- xlsx import — every sheet of the workbook, with a sheet tab bar
+- Excel-compatible cell styles, borders, merged cells and number formats
+- Multiple sheets, undo / redo, copy & paste, auto-fill, find & replace
+- Zoom (Ctrl/Cmd + mouse wheel or pinch)
+- Formulas with arithmetic and cell references (`=A1*B1`)
 - TypeScript support (full type definitions included)
 - Zero external runtime dependencies
 
@@ -29,6 +33,28 @@ yarn add @reogrid/lite
 
 ---
 
+## Quick Start — JavaScript / TypeScript
+
+```html
+<div id="grid" style="width: 100%; height: 400px"></div>
+```
+
+```ts
+import { createReogrid } from '@reogrid/lite'
+
+const grid = createReogrid('#grid')
+const { worksheet } = grid   // the active sheet
+
+worksheet.cell('A1').setValue('Product').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+worksheet.cell('B1').setValue('Price').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+worksheet.cell('A2').value = 'Widget'
+worksheet.cell('B2').value = 9.99
+worksheet.cell('B3').value = '=B2*3'
+worksheet.column(0).width = 120
+```
+
+`createReogrid()` accepts a CSS selector or an `HTMLElement`. Call `grid.destroy()` when you remove the grid from the page.
+
 ## Quick Start — React
 
 ```tsx
@@ -40,7 +66,7 @@ export default function App() {
     worksheet.cell('A1').setValue('Product').setStyle({ bold: true, backgroundColor: '#dbeafe' })
     worksheet.cell('B1').setValue('Price').setStyle({ bold: true, backgroundColor: '#dbeafe' })
     worksheet.cell('A2').value = 'Widget'
-    worksheet.cell('B2').value = '9.99'
+    worksheet.cell('B2').value = 9.99
     worksheet.column(0).width = 120
   }
 
@@ -64,7 +90,7 @@ function onReady({ worksheet }: ReogridInstance) {
   worksheet.cell('A1').setValue('Product').setStyle({ bold: true, backgroundColor: '#dbeafe' })
   worksheet.cell('B1').setValue('Price').setStyle({ bold: true, backgroundColor: '#dbeafe' })
   worksheet.cell('A2').value = 'Widget'
-  worksheet.cell('B2').value = '9.99'
+  worksheet.cell('B2').value = 9.99
   worksheet.column(0).width = 120
 }
 </script>
@@ -76,46 +102,59 @@ function onReady({ worksheet }: ReogridInstance) {
 
 ---
 
-## Loading an xlsx File
+## Opening an xlsx File
 
-```tsx
-// React
-function onReady({ worksheet }: ReogridInstance) {
-  worksheet.loadFromUrl('/data/report.xlsx')
-}
+```ts
+// From a URL — loads every sheet in the workbook
+await grid.loadFromUrl('/data/report.xlsx')
+
+// From a file input
+const input = document.querySelector<HTMLInputElement>('input[type="file"]')!
+input.addEventListener('change', async () => {
+  const file = input.files?.[0]
+  if (file) await grid.loadFromFile(file)
+})
 ```
 
-```vue
-<!-- Vue -->
-<script setup lang="ts">
-async function onReady({ worksheet }: ReogridInstance) {
-  await worksheet.loadFromUrl('/data/report.xlsx')
-}
-</script>
+In React and Vue, `grid` is the instance passed to `onReady` / `@ready`. Load through the grid (`grid.loadFromUrl`), not `grid.worksheet` — the worksheet-level loaders read a single sheet only.
+
+## Events
+
+```ts
+const off = grid.onSelectionChange((range) => {
+  console.log(range?.row, range?.col)   // top-left of the selection, or null
+})
+grid.onCellValueChange(({ row, column, value }) => {
+  console.log(row, column, value)
+})
+
+off()   // every subscription returns its own unsubscribe function
 ```
+
+Subscribe on the grid rather than on `grid.worksheet`: grid-level events follow whichever sheet is active.
 
 ---
 
-## API Reference
+## API Overview
 
-### Props (React)
-
-| Prop | Type | Description |
-|---|---|---|
-| `onReady` | `(instance: ReogridInstance) => void` | Called once after the grid is initialized |
-| `ref` | `React.Ref<ReogridInstance>` | Exposes the grid instance after mount |
-| `style` | `React.CSSProperties` | Styles applied to the host `<div>` |
-| `className` | `string` | CSS class applied to the host `<div>` |
-| `options` | `ReogridOptions` | Advanced options passed to `createReogrid()` |
-
-### Props (Vue)
+### Component props (React)
 
 | Prop | Type | Description |
 |---|---|---|
-| `@ready` | `(instance: ReogridInstance) => void` | Emitted once after the grid is initialized |
-| `style` | `StyleValue` | Styles applied to the host `<div>` |
-| `class` | `string` | CSS class applied to the host `<div>` |
+| `onReady` | `(instance: ReogridInstance) => void` | Called once after the grid is mounted |
+| `onSelectionChange` | `(range: RangePosition \| null) => void` | Selection changed — `{ row, col, rows, columns }` or `null` |
+| `onCellValueChange` | `({ row, column, value }) => void` | A cell's value changed |
+| `onBulkCellsChange` | `(cells) => void` | Many cells changed at once (load, paste, fill) |
+| `onActiveSheetChange` | `(index: number) => void` | The user switched sheets |
+| `onSheetsChange` | `() => void` | A sheet was added, removed, renamed or moved |
+| `onZoomChange` | `(zoom: number) => void` | The active sheet's zoom changed |
+| `ref` | `React.Ref<ReogridInstance>` | Access the grid instance imperatively |
+| `style` / `className` | | Applied to the host `<div>` |
 | `options` | `ReogridOptions` | Advanced options passed to `createReogrid()` |
+
+### Component events (Vue)
+
+`@ready`, `@selection-change`, `@cell-value-change`, `@bulk-cells-change`, `@active-sheet-change`, `@sheets-change`, `@zoom-change` — same payloads as the React props above. `style`, `class` and `options` are props, and a template ref exposes `{ instance }`.
 
 ### `worksheet.cell(a1)` — CellHandle
 
@@ -129,7 +168,7 @@ worksheet.cell('A1').setValue('Title').setStyle({ fontSize: 18, bold: true })
 
 | Member | Type | Description |
 |---|---|---|
-| `value` | `string` (get/set) | Cell value |
+| `value` | `string` (get) / `string \| number` (set) | Cell input — a value, or a formula such as `'=A1*2'` |
 | `style` | `Partial<CellStyle>` (get/set) | Cell style |
 | `setValue(value)` | `CellHandle` | Set value, returns `this` for chaining |
 | `setStyle(style)` | `CellHandle` | Set style, returns `this` for chaining |
@@ -147,64 +186,43 @@ worksheet.range('A1:E17').border({ style: 'solid', color: '#475569', width: 1.5 
 
 | Method | Description |
 |---|---|
-| `merge()` | Merge cells in range |
-| `unmerge()` | Unmerge cells in range |
-| `setStyle(style)` | Apply style to all cells in range |
-| `setBackgroundColor(color)` | Set background color for range |
-| `border(options, sides?)` | Set border; `sides` = `['top','bottom','left','right','outside','inside']` |
+| `merge()` / `unmerge()` | Merge or unmerge the cells in the range |
+| `setStyle(style)` | Apply a style to every cell in the range |
+| `setBold()` / `setBackgroundColor(color)` | Style shortcuts |
+| `border(options, sides?)` | Set borders; `sides` from `'top'`, `'bottom'`, `'left'`, `'right'`, `'outside'`, `'inside'`, `'all'` |
 
-### `worksheet.column(index)` — ColumnHandle
-
-```ts
-worksheet.column(0).width = 120  // A column
-worksheet.column(1).width = 200  // B column
-```
-
-### `worksheet.row(index)` — RowHandle
+### Rows, columns and the sheet
 
 ```ts
-worksheet.row(0).height = 48   // row 1
-worksheet.row(8).height = 24   // row 9
-```
-
-### `worksheet` direct properties
-
-```ts
+worksheet.column(0).width = 120   // column A
+worksheet.row(0).height = 48      // row 1
 worksheet.showGridLines = false
 ```
 
-### Event subscriptions
-
-```ts
-worksheet.onSelectionChange((cell) => {
-  console.log(cell?.row, cell?.column)
-})
-worksheet.onCellValueChange(({ row, column, value }) => {
-  console.log(row, column, value)
-})
-```
-
-### xlsx import
-
-```ts
-await worksheet.loadFromUrl('/data/report.xlsx')
-await worksheet.loadFromFile(file)  // File object from <input type="file">
-```
+See the [documentation](https://web.reogrid.net/docs) for everything else — multiple sheets, number formats, protection, JSON save / load and more.
 
 ---
 
-## Lite Version Limits
+## Lite vs Pro
 
-| Feature | Lite | Pro |
+| | Lite | Pro |
 |---|---|---|
-| Max rows | 100 | Unlimited |
-| Max columns | 26 (A–Z) | Unlimited |
+| Rows × columns | 100 × 26 (A–Z) | Unlimited |
+| Formulas | Arithmetic & cell references | 109 functions (`SUM`, `VLOOKUP`, …), named ranges |
 | xlsx import | ✓ | ✓ |
 | xlsx export | — | ✓ |
+| PDF export & printing | — | ✓ |
+| Freeze panes, sort & filter, grouping | — | ✓ |
+| Conditional formatting, cell types (checkbox, dropdown, progress …) | — | ✓ |
+| Images, 1,000,000-row delay loading | — | ✓ |
 | Commercial use | ✓ | ✓ |
-| Priority support | — | ✓ |
+| Domains | Unlimited | Up to 3 |
+| License key | Not required | Required |
+| Support | Community | 1 year included |
 
-→ [View pricing and upgrade to Pro](https://reogrid.net/jp/prices)
+Pro-only methods exist in Lite but only print a console warning. Moving up is a change of package name — `@reogrid/lite` → `@reogrid/pro` — plus a license key.
+
+→ [Pricing and full comparison](https://web.reogrid.net/pricing)
 
 ---
 
@@ -212,18 +230,28 @@ await worksheet.loadFromFile(file)  // File object from <input type="file">
 
 Each example is a self-contained Vite project (`npm install && npm run dev`).
 
-| Example | React | Vue | Live Demo |
-|---|---|---|---|
-| Basic product list | [`examples/react/`](./examples/react) | [`examples/vue/`](./examples/vue) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
-| **Invoice** (請求書) | [`examples/react/invoice/`](./examples/react/invoice) | [`examples/vue/invoice/`](./examples/vue/invoice) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
+| Example | Source | Live Demo |
+|---|---|---|
+| Product list — React | [`examples/react/`](./examples/react) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) |
+| Product list — Vue | [`examples/vue/`](./examples/vue) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
+| Invoice (請求書) — React | [`examples/react/invoice/`](./examples/react/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) |
+| Invoice (請求書) — Vue | [`examples/vue/invoice/`](./examples/vue/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
+| Invoice — JavaScript | [`examples/vanilla/invoice/`](./examples/vanilla/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/invoice) |
+| Income & expenses — JavaScript | [`examples/vanilla/budget/`](./examples/vanilla/budget) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/budget) |
+| Attendance sheet — JavaScript | [`examples/vanilla/attendance/`](./examples/vanilla/attendance) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/attendance) |
+| Product list — JavaScript | [`examples/vanilla/data-table/`](./examples/vanilla/data-table) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/data-table) |
+
+More on the website: [live demos](https://web.reogrid.net/demos) and [recipes](https://web.reogrid.net/recipes).
 
 ---
 
 ## Links
 
-- [Official site (JP)](https://web.reogrid.net/jp)
-- [Official site (EN)](https://web.reogrid.net)
-- [Pricing / Pro upgrade](https://reogrid.net/jp/prices)
+- [Website](https://web.reogrid.net) · [日本語サイト](https://web.reogrid.net/jp)
+- [Documentation](https://web.reogrid.net/docs)
+- [Release notes](https://web.reogrid.net/release-notes)
+- [Pricing / ReoGrid Web Pro](https://web.reogrid.net/pricing)
+- [Issues](https://github.com/unvell/reogrid-web-lite/issues)
 - [UNVELL Inc.](https://unvell.com)
 
 ---
@@ -239,22 +267,27 @@ See [LICENSE](./LICENSE) for details.
 
 # ReoGrid Web Lite（日本語）
 
-**React・Vue向けCanvasベーススプレッドシートコンポーネント。**
-Excelのセルスタイル・罫線・セル結合をWebで忠実に再現します。
+**Web 向けの Canvas ベース スプレッドシートライブラリ。素の JavaScript / TypeScript やどのフレームワークからでも使え、React・Vue 用コンポーネントも同梱しています。**
+Excel ファイルを開き、Excel のセルレイアウト・書式・罫線・セル結合をブラウザで忠実に再現します。
 
-> **Lite版** — 無償でご利用いただけます（最大100行×26列、xlsx出力なし）。
-> → フル機能は [ReoGrid Web Pro](https://reogrid.net/jp/prices) をご検討ください。
+> **Lite 版** — 無償・商用利用可。次の制限があります:
+> 最大 100 行 × 26 列、数式は四則演算とセル参照のみ、xlsx 出力なし。
+> → フル機能は [ReoGrid Web Pro との比較](https://web.reogrid.net/jp/pricing) をご覧ください。
+
+[公式サイト](https://web.reogrid.net/jp) · [ドキュメント](https://web.reogrid.net/jp/docs) · [デモ](https://web.reogrid.net/jp/demos)
 
 ---
 
 ## 特徴
 
-- Canvasによる高速描画
-- React 17+ / Vue 3+ 対応
-- Excelと互換性のあるセルスタイル・罫線・セル結合
-- 列幅・行高さのリサイズ、列・行の固定
-- xlsxインポート（既存のExcelファイルを読み込み可能）
-- TypeScript対応（型定義付き）
+- Canvas による高速描画
+- フレームワークに依存しないコア（`createReogrid()`）と、React 17+ / Vue 3+ 用コンポーネント
+- xlsx インポート — ブック内のすべてのシートをシートタブ付きで読み込み
+- Excel 互換のセル書式・罫線・セル結合・表示形式
+- 複数シート、元に戻す / やり直し、コピー & ペースト、オートフィル、検索・置換
+- 表示倍率（Ctrl/Cmd + ホイール、ピンチ）
+- 四則演算とセル参照の数式（`=A1*B1`）
+- TypeScript 対応（型定義付き）
 - 外部ランタイム依存なし
 
 ## インストール
@@ -267,6 +300,28 @@ yarn add @reogrid/lite
 
 ---
 
+## クイックスタート — JavaScript / TypeScript
+
+```html
+<div id="grid" style="width: 100%; height: 400px"></div>
+```
+
+```ts
+import { createReogrid } from '@reogrid/lite'
+
+const grid = createReogrid('#grid')
+const { worksheet } = grid   // アクティブなシート
+
+worksheet.cell('A1').setValue('商品名').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+worksheet.cell('B1').setValue('価格').setStyle({ bold: true, backgroundColor: '#dbeafe' })
+worksheet.cell('A2').value = 'ウィジェット'
+worksheet.cell('B2').value = 1000
+worksheet.cell('B3').value = '=B2*3'
+worksheet.column(0).width = 120
+```
+
+`createReogrid()` には CSS セレクターか `HTMLElement` を渡します。ページから取り除くときは `grid.destroy()` を呼んでください。
+
 ## クイックスタート — React
 
 ```tsx
@@ -278,7 +333,7 @@ export default function App() {
     worksheet.cell('A1').setValue('商品名').setStyle({ bold: true, backgroundColor: '#dbeafe' })
     worksheet.cell('B1').setValue('価格').setStyle({ bold: true, backgroundColor: '#dbeafe' })
     worksheet.cell('A2').value = 'ウィジェット'
-    worksheet.cell('B2').value = '1,000'
+    worksheet.cell('B2').value = 1000
     worksheet.column(0).width = 120
   }
 
@@ -302,7 +357,7 @@ function onReady({ worksheet }: ReogridInstance) {
   worksheet.cell('A1').setValue('商品名').setStyle({ bold: true, backgroundColor: '#dbeafe' })
   worksheet.cell('B1').setValue('価格').setStyle({ bold: true, backgroundColor: '#dbeafe' })
   worksheet.cell('A2').value = 'ウィジェット'
-  worksheet.cell('B2').value = '1,000'
+  worksheet.cell('B2').value = 1000
   worksheet.column(0).width = 120
 }
 </script>
@@ -314,18 +369,59 @@ function onReady({ worksheet }: ReogridInstance) {
 
 ---
 
-## Lite版の制限
+## xlsx ファイルを開く
 
-| 機能 | Lite | Pro |
+```ts
+// URL から — ブック内のすべてのシートを読み込みます
+await grid.loadFromUrl('/data/report.xlsx')
+
+// ファイル選択から
+const input = document.querySelector<HTMLInputElement>('input[type="file"]')!
+input.addEventListener('change', async () => {
+  const file = input.files?.[0]
+  if (file) await grid.loadFromFile(file)
+})
+```
+
+React / Vue では `onReady` / `@ready` に渡されるインスタンスが `grid` です。読み込みは `grid.worksheet` ではなく `grid` から行ってください（ワークシート側のローダーは 1 シートだけを読み込みます）。
+
+## イベント
+
+```ts
+const off = grid.onSelectionChange((range) => {
+  console.log(range?.row, range?.col)   // 選択範囲の左上、または null
+})
+grid.onCellValueChange(({ row, column, value }) => {
+  console.log(row, column, value)
+})
+
+off()   // 購読はそれぞれ解除用の関数を返します
+```
+
+`grid.worksheet` ではなく `grid` で購読してください。`grid` のイベントはアクティブなシートに追従します。React の props（`onSelectionChange`・`onActiveSheetChange`・`onZoomChange` など）と Vue のイベント（`@selection-change` など）も同じで、一覧は英語版の API Overview にあります。
+
+---
+
+## Lite 版と Pro 版
+
+| | Lite | Pro |
 |---|---|---|
-| 最大行数 | 100行 | 無制限 |
-| 最大列数 | 26列（A〜Z） | 無制限 |
-| xlsxインポート | ✓ | ✓ |
-| xlsxエクスポート | — | ✓ |
+| 行 × 列 | 100 × 26（A〜Z） | 無制限 |
+| 数式 | 四則演算とセル参照 | 109 関数（`SUM`・`VLOOKUP` など）、名前付き範囲 |
+| xlsx インポート | ✓ | ✓ |
+| xlsx エクスポート | — | ✓ |
+| PDF 出力・印刷 | — | ✓ |
+| ウィンドウ枠の固定・並べ替えとフィルター・グループ化 | — | ✓ |
+| 条件付き書式・セルタイプ（チェックボックス、ドロップダウン、プログレスなど） | — | ✓ |
+| 画像、100 万行の遅延読み込み | — | ✓ |
 | 商用利用 | ✓ | ✓ |
-| 優先サポート | — | ✓ |
+| ドメイン数 | 無制限 | 3 まで |
+| ライセンスキー | 不要 | 必要 |
+| サポート | コミュニティ | 1 年間付属 |
 
-→ [価格・Pro版へのアップグレード](https://reogrid.net/jp/prices)
+Pro 専用のメソッドは Lite にも存在しますが、コンソールに警告を出すだけです。Pro への移行は、パッケージ名を `@reogrid/lite` → `@reogrid/pro` に替えてライセンスキーを渡すだけです。
+
+→ [価格と機能の詳細比較](https://web.reogrid.net/jp/pricing)
 
 ---
 
@@ -333,13 +429,24 @@ function onReady({ worksheet }: ReogridInstance) {
 
 各サンプルは単体で動く Vite プロジェクトです（`npm install && npm run dev`）。
 
-| サンプル | React | Vue | Live Demo |
-|---|---|---|---|
-| 商品一覧（基本） | [`examples/react/`](./examples/react) | [`examples/vue/`](./examples/vue) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
-| **請求書** | [`examples/react/invoice/`](./examples/react/invoice) | [`examples/vue/invoice/`](./examples/vue/invoice) | [React ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) · [Vue ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
+| サンプル | ソース | Live Demo |
+|---|---|---|
+| 商品一覧 — React | [`examples/react/`](./examples/react) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react) |
+| 商品一覧 — Vue | [`examples/vue/`](./examples/vue) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue) |
+| 請求書 — React | [`examples/react/invoice/`](./examples/react/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/react/invoice) |
+| 請求書 — Vue | [`examples/vue/invoice/`](./examples/vue/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vue/invoice) |
+| 請求書 — JavaScript | [`examples/vanilla/invoice/`](./examples/vanilla/invoice) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/invoice) |
+| 収支管理表 — JavaScript | [`examples/vanilla/budget/`](./examples/vanilla/budget) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/budget) |
+| 勤怠管理表 — JavaScript | [`examples/vanilla/attendance/`](./examples/vanilla/attendance) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/attendance) |
+| 商品一覧 — JavaScript | [`examples/vanilla/data-table/`](./examples/vanilla/data-table) | [StackBlitz ↗](https://stackblitz.com/github/unvell/reogrid-web-lite/tree/main/examples/vanilla/data-table) |
+
+その他のサンプルは公式サイトの [デモ](https://web.reogrid.net/jp/demos) にあります。
 
 ## リンク
 
-- [公式サイト（日本語）](https://web.reogrid.net/jp)
-- [価格・購入](https://reogrid.net/jp/prices)
-- [UNVELL株式会社](https://unvell.com)
+- [公式サイト（日本語）](https://web.reogrid.net/jp) · [English](https://web.reogrid.net)
+- [ドキュメント](https://web.reogrid.net/jp/docs)
+- [リリースノート](https://web.reogrid.net/jp/release-notes)
+- [価格・ReoGrid Web Pro](https://web.reogrid.net/jp/pricing)
+- [不具合の報告（GitHub Issues）](https://github.com/unvell/reogrid-web-lite/issues)
+- [UNVELL 株式会社](https://unvell.com)
