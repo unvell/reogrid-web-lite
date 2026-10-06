@@ -162,10 +162,10 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.5.tgz#6912b00d2c631c0d15ce1a7ab57cd657f2a8f8ba"
   integrity sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==
 
-"@reogrid/lite@^0.1.0":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@reogrid/lite/-/lite-0.1.2.tgz#6d047d136ae2f12691ef6c095743dbcb40991a6f"
-  integrity sha512-KuXG8eWd2Vvy+G7GG2STE0xf+eDlfKxas4j5cVqjhHdDo/rldN47D73QR4S6CTLyK3suoCSMFe3l6Z0mMTXPyg==
+"@reogrid/lite@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@reogrid/lite/-/lite-1.6.0.tgz#83270c25cc49b5f83d66c99366ecb3ee6dd87414"
+  integrity sha512-o39PtthUdUXF+rySksmKYLrv5sz4um7AY1qOM2J2xnhGOrIc3rUT3JM+XTfqEaP+WrfxG5PnlxfuQCi61PIqxw==
 
 "@rollup/rollup-android-arm-eabi@4.59.0":
   version "4.59.0"

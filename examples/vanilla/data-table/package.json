@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reogrid/lite": "^0.1.2"
+    "@reogrid/lite": "^1.6.0"
   },
   "devDependencies": {
     "vite": "^6.0.0"

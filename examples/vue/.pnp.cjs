@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:0.1.1"],\
+          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:1.6.0"],\
           ["@vitejs/plugin-vue", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:5.2.4"],\
           ["reogrid-lite-vue-basic", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
@@ -366,17 +366,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@reogrid/lite", [\
-      ["npm:0.1.1", {\
-        "packageLocation": "../../../../../.yarn/berry/cache/@reogrid-lite-npm-0.1.1-1eac8008a8-10c0.zip/node_modules/@reogrid/lite/",\
+      ["npm:1.6.0", {\
+        "packageLocation": "../../../../../.yarn/berry/cache/@reogrid-lite-npm-1.6.0-721288de31-10c0.zip/node_modules/@reogrid/lite/",\
         "packageDependencies": [\
-          ["@reogrid/lite", "npm:0.1.1"]\
+          ["@reogrid/lite", "npm:1.6.0"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:0.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/@reogrid-lite-virtual-bd4fc72f49/6/.yarn/berry/cache/@reogrid-lite-npm-0.1.1-1eac8008a8-10c0.zip/node_modules/@reogrid/lite/",\
+      ["virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:1.6.0", {\
+        "packageLocation": "./.yarn/__virtual__/@reogrid-lite-virtual-4b74889b88/6/.yarn/berry/cache/@reogrid-lite-npm-1.6.0-721288de31-10c0.zip/node_modules/@reogrid/lite/",\
         "packageDependencies": [\
-          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:0.1.1"],\
+          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:1.6.0"],\
           ["@types/react", null],\
           ["@types/react-dom", null],\
           ["@types/vue", null],\
@@ -1464,7 +1464,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
-          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:0.1.1"],\
+          ["@reogrid/lite", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:1.6.0"],\
           ["@vitejs/plugin-vue", "virtual:e1ccc8a181d57f8e146c63c822d6fdde841f2369c0cf3e7c7699a5dc951d53aa50809835db101f5f69d0380e6e3ffef64f6bb4802c66417f0ee1f4da649ad72d#npm:5.2.4"],\
           ["reogrid-lite-vue-basic", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\

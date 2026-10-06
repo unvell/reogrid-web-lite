@@ -475,9 +475,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reogrid/lite@npm:^0.1.0":
-  version: 0.1.1
-  resolution: "@reogrid/lite@npm:0.1.1"
+"@reogrid/lite@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@reogrid/lite@npm:1.6.0"
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
@@ -489,7 +489,7 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 10c0/c7f15cf78590a1292f611ee7f1007b1fcd11485901c380c225e18587cdcff44da9aaccf6897b1eb62dae82b494890cb75eea29cf25238c03cfaaeca094b9b1bf
+  checksum: 10c0/3e746968f07a492503d1fa1f1a6ec57073d3362d30fafb4f8398e4c9db60c27daea288585408658ba451c7e1b92eb70952f2462672e4607564d4b3714ca8b9c7
   languageName: node
   linkType: hard
 
@@ -1393,7 +1393,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "reogrid-lite-react-basic@workspace:."
   dependencies:
-    "@reogrid/lite": "npm:^0.1.0"
+    "@reogrid/lite": "npm:^1.6.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     "@vitejs/plugin-react": "npm:^4.0.0"
